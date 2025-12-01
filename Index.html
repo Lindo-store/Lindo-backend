@@ -3,24 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LINDOʻ STORE - Premium T-Shirts</title>
+    <title>LINDOʻ STORE - Premium Streetwear</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .product-card { transition: transform 0.2s; }
         .product-card:active { transform: scale(0.98); }
         .cart-item { border-bottom: 1px solid #374151; padding: 12px 0; }
+        .product-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .product-image {
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        /* Store Name Animation */
+        @keyframes glow {
+            0%, 100% { 
+                text-shadow: 0 0 20px #8B5CF6, 0 0 30px #8B5CF6, 0 0 40px #8B5CF6;
+                transform: scale(1);
+            }
+            50% { 
+                text-shadow: 0 0 30px #EC4899, 0 0 40px #EC4899, 0 0 50px #EC4899;
+                transform: scale(1.05);
+            }
+        }
+        
+        .store-name {
+            animation: glow 3s ease-in-out infinite;
+            font-weight: 900;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Promotion Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FF6347);
+            animation: shimmer 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: black;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
     <!-- Header -->
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div class="px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-purple-400">LINDOʻ STORE</h1>
-            <button id="cartButton" class="bg-purple-600 px-4 py-2 rounded-lg flex items-center gap-2">
+        <div class="px-4 py-4 flex justify-between items-center">
+            <h1 class="store-name text-3xl md:text-4xl font-black tracking-wide">LINDOʻ STORE</h1>
+            <button id="cartButton" class="bg-purple-600 px-5 py-3 rounded-lg flex items-center gap-2 font-bold text-lg">
                 🛒 <span id="cartCount">0</span>
             </button>
         </div>
     </header>
+
+    <!-- Promotion Banner -->
+    <div class="promo-banner text-black text-center py-3 px-4 font-bold text-sm md:text-base">
+        🎉 LIMITED TIME OFFER! FREE SHIPPING ON ORDERS OVER R500 🎉
+    </div>
 
     <!-- Test Banner -->
     <div class="bg-yellow-600 text-white text-center py-2 text-sm">
@@ -28,12 +104,12 @@
     </div>
 
     <!-- Products Grid -->
-    <div id="productsGrid" class="p-4 grid gap-4">
+    <div id="productsGrid" class="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Products will load here -->
     </div>
 
     <!-- Admin Button -->
-    <button id="adminButton" class="fixed bottom-4 right-4 bg-blue-600 text-white w-14 h-14 rounded-full text-2xl shadow-lg">
+    <button id="adminButton" class="fixed bottom-4 right-4 bg-blue-600 text-white w-14 h-14 rounded-full text-2xl shadow-lg z-40">
         +
     </button>
 
@@ -52,8 +128,30 @@
                     <span>Total:</span>
                     <span id="cartTotal">R 0.00</span>
                 </div>
+                
+                <!-- Free Shipping Progress -->
+                <div class="bg-gray-700 rounded-lg p-3 mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Add R<span id="shippingNeeded">500</span> for FREE shipping!</span>
+                        <span id="shippingProgress">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-600 rounded-full h-2">
+                        <div id="shippingBar" class="bg-green-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Test Card Info -->
+                <div class="bg-yellow-900 border border-yellow-600 rounded-lg p-3 mb-4">
+                    <h3 class="text-yellow-300 font-bold mb-1 text-sm">🧪 TEST CARD:</h3>
+                    <p class="text-yellow-200 text-xs">5284 9732 7396 1239</p>
+                    <p class="text-yellow-200 text-xs">Exp: 01/30 | CVV: 311</p>
+                </div>
+                
                 <button id="checkoutButton" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold">
                     🔒 Checkout with PayFast
+                </button>
+                <button id="continueShopping" class="w-full bg-gray-600 text-white py-2 rounded-lg mt-2">
+                    Continue Shopping
                 </button>
             </div>
         </div>
@@ -63,17 +161,39 @@
     <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="bg-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold">Add Product</h2>
+                <h2 class="text-xl font-bold">Add New Product</h2>
                 <button id="closeAdmin" class="text-2xl">×</button>
             </div>
             <div class="p-4 overflow-y-auto">
                 <form id="productForm" class="space-y-4">
-                    <input type="text" id="productName" placeholder="Product Name" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
-                    <textarea id="productDesc" placeholder="Description" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 h-20" required></textarea>
-                    <input type="number" id="productPrice" placeholder="Price (Rands)" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
-                    <input type="url" id="productImage" placeholder="Image URL" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
-                    <div class="flex gap-2">
-                        <button type="submit" class="flex-1 bg-green-600 text-white p-3 rounded-lg font-bold">Add Product</button>
+                    <div>
+                        <label class="text-white text-sm block mb-1">Product Name</label>
+                        <input type="text" id="productName" placeholder="e.g., LINDOʻ Summer Tee" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    </div>
+                    <div>
+                        <label class="text-white text-sm block mb-1">Description</label>
+                        <textarea id="productDesc" placeholder="Product description..." class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 h-20" required></textarea>
+                    </div>
+                    <div>
+                        <label class="text-white text-sm block mb-1">Price (Rands)</label>
+                        <input type="number" id="productPrice" placeholder="299.99" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    </div>
+                    <div>
+                        <label class="text-white text-sm block mb-1">Category</label>
+                        <select id="productCategory" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                            <option value="tshirt">T-Shirt</option>
+                            <option value="hoodie">Hoodie</option>
+                            <option value="cap">Cap</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-white text-sm block mb-1">Image URLs (one per line)</label>
+                        <textarea id="productImages" placeholder="https://image1.jpg&#10;https://image2.jpg&#10;https://image3.jpg" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 h-24" required></textarea>
+                        <p class="text-gray-400 text-xs mt-1">Add multiple image URLs for rotation (one per line)</p>
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" class="flex-1 bg-green-600 text-white p-3 rounded-lg font-bold">✅ Add Product</button>
                         <button type="button" id="cancelAdmin" class="flex-1 bg-gray-600 text-white p-3 rounded-lg">Cancel</button>
                     </div>
                 </form>
@@ -82,47 +202,216 @@
     </div>
 
     <script>
-        // Mobile-optimized LINDO Store
+        // Mobile-optimized LINDO Store with animation & new products
         let cart = [];
+        const FREE_SHIPPING_THRESHOLD = 500;
         let products = [
+            // T-SHIRTS
             {
-                name: "LINDOʻ Premium Tee",
-                description: "High-quality cotton t-shirt",
+                name: "LINDOʻ SIGNATURE TEE",
+                description: "PREMIUM COTTON T-SHIRT WITH EXCLUSIVE PRINT",
+                price: 349.99,
+                category: "tshirt",
+                images: [
+                    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
+                    "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400",
+                    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400"
+                ],
+                currentImageIndex: 0
+            },
+            {
+                name: "LINDOʻ BLACK EDITION", 
+                description: "CLASSIC BLACK T-SHIRT WITH MINIMALIST DESIGN",
                 price: 299.99,
-                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400"
+                category: "tshirt",
+                images: [
+                    "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
+                    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+                    "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400"
+                ],
+                currentImageIndex: 0
             },
             {
-                name: "LINDOʻ Classic Black", 
-                description: "Classic black minimalist design",
+                name: "LINDOʻ SUMMER VIBES",
+                description: "LIGHTWEIGHT T-SHIRT PERFECT FOR SUMMER DAYS",
+                price: 279.99,
+                category: "tshirt",
+                images: [
+                    "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400",
+                    "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400",
+                    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"
+                ],
+                currentImageIndex: 0
+            },
+            
+            // HOODIES
+            {
+                name: "LINDOʻ PREMIUM HOODIE",
+                description: "HEAVYWEIGHT COTTON HOODIE WITH EMBROIDERED LOGO",
+                price: 599.99,
+                category: "hoodie",
+                images: [
+                    "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
+                    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+                    "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400"
+                ],
+                currentImageIndex: 0
+            },
+            {
+                name: "LINDOʻ STREET HOODIE",
+                description: "COMFORTABLE STREETWEAR HOODIE WITH MODERN FIT",
+                price: 549.99,
+                category: "hoodie",
+                images: [
+                    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+                    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
+                    "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400"
+                ],
+                currentImageIndex: 0
+            },
+            
+            // CAPS
+            {
+                name: "LINDOʻ SIGNATURE CAP",
+                description: "ADJUSTABLE BASEBALL CAP WITH EMBROIDERED LOGO",
                 price: 249.99,
-                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400"
+                category: "cap",
+                images: [
+                    "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400",
+                    "https://images.unsplash.com/photo-1589998059171-988d887df646?w=400",
+                    "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=400"
+                ],
+                currentImageIndex: 0
             },
             {
-                name: "LINDOʻ Limited Edition",
-                description: "Exclusive limited edition",
-                price: 349.99, 
-                image: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400"
+                name: "LINDOʻ SNAPBACK CAP",
+                description: "CLASSIC SNAPBACK CAP WITH MULTIPLE COLOR OPTIONS",
+                price: 229.99,
+                category: "cap",
+                images: [
+                    "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=400",
+                    "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400",
+                    "https://images.unsplash.com/photo-1589998059171-988d887df646?w=400"
+                ],
+                currentImageIndex: 0
+            },
+            
+            // PREMIUM
+            {
+                name: "LINDOʻ LIMITED EDITION",
+                description: "EXCLUSIVE LIMITED EDITION DESIGN - ONLY 100 MADE",
+                price: 799.99,
+                category: "premium",
+                images: [
+                    "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400",
+                    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400",
+                    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400"
+                ],
+                currentImageIndex: 0
+            },
+            {
+                name: "LINDOʻ COLLECTOR'S HOODIE",
+                description: "PREMIUM HOODIE WITH EXCLUSIVE LIMITED DESIGN",
+                price: 699.99,
+                category: "premium",
+                images: [
+                    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400",
+                    "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
+                    "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400"
+                ],
+                currentImageIndex: 0
             }
         ];
 
-        // Load products
+        // Category labels and colors
+        const categoryConfig = {
+            tshirt: { label: "T-SHIRT", color: "linear-gradient(135deg, #3B82F6, #1D4ED8)" },
+            hoodie: { label: "HOODIE", color: "linear-gradient(135deg, #8B5CF6, #7C3AED)" },
+            cap: { label: "CAP", color: "linear-gradient(135deg, #F59E0B, #D97706)" },
+            premium: { label: "PREMIUM", color: "linear-gradient(135deg, #EC4899, #BE185D)" }
+        };
+
+        // Load products with numbers and rotation
         function loadProducts() {
             const grid = document.getElementById('productsGrid');
-            grid.innerHTML = products.map(product => `
-                <div class="product-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+            grid.innerHTML = products.map((product, index) => {
+                const category = categoryConfig[product.category];
+                return `
+                <div class="product-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden hover:border-purple-500 transition">
+                    <div class="product-image-container relative">
+                        <div class="product-number">${index + 1}</div>
+                        <div class="category-badge" style="background: ${category.color}">${category.label}</div>
+                        <img 
+                            src="${product.images[product.currentImageIndex]}" 
+                            alt="${product.name}" 
+                            class="product-image w-full h-48 object-cover cursor-pointer"
+                            onclick="rotateProductImage(${index})"
+                            title="Click to view next image"
+                        >
+                        <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                            ${product.images.length} images • Click to rotate
+                        </div>
+                    </div>
                     <div class="p-4">
-                        <h3 class="text-lg font-bold mb-2">${product.name}</h3>
+                        <h3 class="text-lg font-bold mb-2 uppercase tracking-wide">${product.name}</h3>
                         <p class="text-gray-300 text-sm mb-3">${product.description}</p>
                         <div class="flex justify-between items-center">
                             <span class="text-xl font-bold text-purple-400">R ${product.price}</span>
-                            <button onclick="addToCart(${products.indexOf(product)})" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
-                                Add to Cart
+                            <button onclick="addToCart(${index})" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition font-bold">
+                                ADD TO CART
                             </button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        // Update shipping progress
+        function updateShippingProgress() {
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const needed = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+            const progress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
+            
+            document.getElementById('shippingNeeded').textContent = needed;
+            document.getElementById('shippingProgress').textContent = Math.round(progress) + '%';
+            document.getElementById('shippingBar').style.width = progress + '%';
+            
+            // Change color based on progress
+            if (progress >= 100) {
+                document.getElementById('shippingBar').classList.remove('bg-green-500', 'bg-yellow-500');
+                document.getElementById('shippingBar').classList.add('bg-green-500');
+            } else if (progress >= 50) {
+                document.getElementById('shippingBar').classList.remove('bg-green-500', 'bg-yellow-500');
+                document.getElementById('shippingBar').classList.add('bg-yellow-500');
+            }
+        }
+
+        // Rotate product image
+        function rotateProductImage(productIndex) {
+            const product = products[productIndex];
+            product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+            
+            const productCard = document.getElementById('productsGrid').children[productIndex];
+            const img = productCard.querySelector('.product-image');
+            img.src = product.images[product.currentImageIndex];
+            
+            img.style.opacity = '0.7';
+            setTimeout(() => {
+                img.style.opacity = '1';
+            }, 150);
+        }
+
+        // Auto-rotate images every 5 seconds
+        function startImageRotation() {
+            setInterval(() => {
+                products.forEach((product, index) => {
+                    const productCard = document.getElementById('productsGrid').children[index];
+                    if (productCard && !productCard.matches(':hover')) {
+                        rotateProductImage(index);
+                    }
+                });
+            }, 5000);
         }
 
         // Cart functions
@@ -130,10 +419,10 @@
             cart.push(products[index]);
             updateCart();
             const button = event.target;
-            button.textContent = 'Added!';
+            button.textContent = 'ADDED!';
             button.classList.add('bg-green-600');
             setTimeout(() => {
-                button.textContent = 'Add to Cart';
+                button.textContent = 'ADD TO CART';
                 button.classList.remove('bg-green-600');
             }, 1000);
         }
@@ -144,32 +433,41 @@
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             
             document.getElementById('cartTotal').textContent = `R ${total.toFixed(2)}`;
+            updateShippingProgress();
             
             if (cart.length === 0) {
                 cartItems.innerHTML = '<p class="text-gray-400 text-center py-8">Your cart is empty</p>';
             } else {
-                cartItems.innerHTML = cart.map(item => `
+                cartItems.innerHTML = cart.map((item, index) => `
                     <div class="cart-item">
-                        <div class="flex justify-between">
+                        <div class="flex justify-between items-center">
                             <div>
-                                <p class="font-medium">${item.name}</p>
+                                <p class="font-medium uppercase">${item.name}</p>
                                 <p class="text-purple-400">R ${item.price}</p>
                             </div>
+                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300 text-sm font-bold">
+                                REMOVE
+                            </button>
                         </div>
                     </div>
                 `).join('');
             }
         }
 
-        // Checkout function - UPDATE THIS URL!
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Checkout function
         function checkout() {
             if (cart.length === 0) return;
             
             const orderId = 'lindo_' + Date.now();
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             
-            // REPLACE WITH YOUR ACTUAL BACKEND URL
             const backendUrl = 'https://lindo-backend.onrender.com';
+            const storeUrl = 'https://tiny-toffee-bde57d.netlify.app';
             
             const form = document.createElement('form');
             form.method = 'POST';
@@ -178,12 +476,13 @@
             const fields = {
                 merchant_id: '10000100',
                 merchant_key: '46f0cd694581a',
-                return_url: window.location.origin + '/success.html',
-                cancel_url: window.location.origin + '/cancel.html', 
+                return_url: storeUrl + '/success.html',
+                cancel_url: storeUrl + '/cancel.html',
                 notify_url: backendUrl + '/payfast-notify',
                 amount: total.toFixed(2),
                 item_name: 'LINDO Order - ' + cart.length + ' items',
-                m_payment_id: orderId
+                m_payment_id: orderId,
+                email_address: 'customer@example.com'
             };
             
             for (const key in fields) {
@@ -201,16 +500,22 @@
         // Admin functions
         document.getElementById('productForm').onsubmit = function(e) {
             e.preventDefault();
+            const imageUrls = document.getElementById('productImages').value.split('\n').filter(url => url.trim() !== '');
+            
             const newProduct = {
-                name: document.getElementById('productName').value,
+                name: document.getElementById('productName').value.toUpperCase(),
                 description: document.getElementById('productDesc').value,
                 price: parseFloat(document.getElementById('productPrice').value),
-                image: document.getElementById('productImage').value
+                category: document.getElementById('productCategory').value,
+                images: imageUrls,
+                currentImageIndex: 0
             };
             products.push(newProduct);
             loadProducts();
             document.getElementById('adminModal').classList.add('hidden');
             this.reset();
+            
+            alert('✅ PRODUCT ADDED SUCCESSFULLY!');
         };
 
         // Event listeners
@@ -219,6 +524,10 @@
         };
         
         document.getElementById('closeCart').onclick = () => {
+            document.getElementById('cartModal').classList.add('hidden');
+        };
+        
+        document.getElementById('continueShopping').onclick = () => {
             document.getElementById('cartModal').classList.add('hidden');
         };
         
@@ -233,249 +542,28 @@
             document.getElementById('adminModal').classList.add('hidden');
         };
 
-        // Initialize store
-        loadProducts();
-        updateCart();
-    </script>
-</body>
-  </html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LINDOʻ STORE - Premium T-Shirts</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .product-card { transition: transform 0.2s; }
-        .product-card:active { transform: scale(0.98); }
-        .cart-item { border-bottom: 1px solid #374151; padding: 12px 0; }
-    </style>
-</head>
-<body class="bg-gray-900 text-white">
-    <!-- Header -->
-    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div class="px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-purple-400">LINDOʻ STORE</h1>
-            <button id="cartButton" class="bg-purple-600 px-4 py-2 rounded-lg flex items-center gap-2">
-                🛒 <span id="cartCount">0</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Test Banner -->
-    <div class="bg-yellow-600 text-white text-center py-2 text-sm">
-        <strong>TEST MODE:</strong> Card: 5284 9732 7396 1239 (01/30 - 311)
-    </div>
-
-    <!-- Products Grid -->
-    <div id="productsGrid" class="p-4 grid gap-4">
-        <!-- Products will load here -->
-    </div>
-
-    <!-- Admin Button -->
-    <button id="adminButton" class="fixed bottom-4 right-4 bg-blue-600 text-white w-14 h-14 rounded-full text-2xl shadow-lg">
-        +
-    </button>
-
-    <!-- Cart Modal -->
-    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-end justify-center z-50 p-4">
-        <div class="bg-gray-800 rounded-t-2xl w-full max-w-md max-h-[80vh] overflow-hidden">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold">Your Cart</h2>
-                <button id="closeCart" class="text-2xl">×</button>
-            </div>
-            <div id="cartItems" class="p-4 overflow-y-auto max-h-96">
-                <!-- Cart items here -->
-            </div>
-            <div class="p-4 border-t border-gray-700">
-                <div class="flex justify-between text-lg font-bold mb-4">
-                    <span>Total:</span>
-                    <span id="cartTotal">R 0.00</span>
-                </div>
-                <button id="checkoutButton" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold">
-                    🔒 Checkout with PayFast
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Modal -->
-    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-        <div class="bg-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold">Add Product</h2>
-                <button id="closeAdmin" class="text-2xl">×</button>
-            </div>
-            <div class="p-4 overflow-y-auto">
-                <form id="productForm" class="space-y-4">
-                    <input type="text" id="productName" placeholder="Product Name" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
-                    <textarea id="productDesc" placeholder="Description" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 h-20" required></textarea>
-                    <input type="number" id="productPrice" placeholder="Price (Rands)" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
-                    <input type="url" id="productImage" placeholder="Image URL" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
-                    <div class="flex gap-2">
-                        <button type="submit" class="flex-1 bg-green-600 text-white p-3 rounded-lg font-bold">Add Product</button>
-                        <button type="button" id="cancelAdmin" class="flex-1 bg-gray-600 text-white p-3 rounded-lg">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Mobile-optimized LINDO Store
-        let cart = [];
-        let products = [
-            {
-                name: "LINDOʻ Premium Tee",
-                description: "High-quality cotton t-shirt",
-                price: 299.99,
-                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400"
-            },
-            {
-                name: "LINDOʻ Classic Black", 
-                description: "Classic black minimalist design",
-                price: 249.99,
-                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400"
-            },
-            {
-                name: "LINDOʻ Limited Edition",
-                description: "Exclusive limited edition",
-                price: 349.99, 
-                image: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400"
+        // Close modals when clicking outside
+        document.getElementById('cartModal').onclick = (e) => {
+            if (e.target.id === 'cartModal') {
+                document.getElementById('cartModal').classList.add('hidden');
             }
-        ];
-
-        // Load products
-        function loadProducts() {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = products.map(product => `
-                <div class="product-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold mb-2">${product.name}</h3>
-                        <p class="text-gray-300 text-sm mb-3">${product.description}</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold text-purple-400">R ${product.price}</span>
-                            <button onclick="addToCart(${products.indexOf(product)})" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Cart functions
-        function addToCart(index) {
-            cart.push(products[index]);
-            updateCart();
-            const button = event.target;
-            button.textContent = 'Added!';
-            button.classList.add('bg-green-600');
-            setTimeout(() => {
-                button.textContent = 'Add to Cart';
-                button.classList.remove('bg-green-600');
-            }, 1000);
-        }
-
-        function updateCart() {
-            document.getElementById('cartCount').textContent = cart.length;
-            const cartItems = document.getElementById('cartItems');
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            
-            document.getElementById('cartTotal').textContent = `R ${total.toFixed(2)}`;
-            
-            if (cart.length === 0) {
-                cartItems.innerHTML = '<p class="text-gray-400 text-center py-8">Your cart is empty</p>';
-            } else {
-                cartItems.innerHTML = cart.map(item => `
-                    <div class="cart-item">
-                        <div class="flex justify-between">
-                            <div>
-                                <p class="font-medium">${item.name}</p>
-                                <p class="text-purple-400">R ${item.price}</p>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+        };
+        
+        document.getElementById('adminModal').onclick = (e) => {
+            if (e.target.id === 'adminModal') {
+                document.getElementById('adminModal').classList.add('hidden');
             }
-        }
-
-        // Checkout function - UPDATE THIS URL!
-        function checkout() {
-            if (cart.length === 0) return;
-            
-            const orderId = 'lindo_' + Date.now();
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            
-            // REPLACE WITH YOUR ACTUAL BACKEND URL
-            const backendUrl = 'https://lindo-backend.onrender.com';
-            
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://sandbox.payfast.co.za/eng/process';
-            
-            const fields = {
-                merchant_id: '10000100',
-                merchant_key: '46f0cd694581a',
-                return_url: window.location.origin + '/success.html',
-                cancel_url: window.location.origin + '/cancel.html', 
-                notify_url: backendUrl + '/payfast-notify',
-                amount: total.toFixed(2),
-                item_name: 'LINDO Order - ' + cart.length + ' items',
-                m_payment_id: orderId
-            };
-            
-            for (const key in fields) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = fields[key];
-                form.appendChild(input);
-            }
-            
-            document.body.appendChild(form);
-            form.submit();
-        }
-
-        // Admin functions
-        document.getElementById('productForm').onsubmit = function(e) {
-            e.preventDefault();
-            const newProduct = {
-                name: document.getElementById('productName').value,
-                description: document.getElementById('productDesc').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                image: document.getElementById('productImage').value
-            };
-            products.push(newProduct);
-            loadProducts();
-            document.getElementById('adminModal').classList.add('hidden');
-            this.reset();
-        };
-
-        // Event listeners
-        document.getElementById('cartButton').onclick = () => {
-            document.getElementById('cartModal').classList.remove('hidden');
-        };
-        
-        document.getElementById('closeCart').onclick = () => {
-            document.getElementById('cartModal').classList.add('hidden');
-        };
-        
-        document.getElementById('checkoutButton').onclick = checkout;
-        
-        document.getElementById('adminButton').onclick = () => {
-            document.getElementById('adminModal').classList.remove('hidden');
-        };
-        
-        document.getElementById('closeAdmin').onclick = 
-        document.getElementById('cancelAdmin').onclick = () => {
-            document.getElementById('adminModal').classList.add('hidden');
         };
 
         // Initialize store
         loadProducts();
         updateCart();
+        startImageRotation();
+        
+        console.log('🛍️ LINDO STORE LOADED SUCCESSFULLY!');
+        console.log('✨ ANIMATED STORE NAME ACTIVATED');
+        console.log('🚀 FREE SHIPPING PROGRESS ENABLED');
+        console.log('📍 STORE URL: https://tiny-toffee-bde57d.netlify.app');
     </script>
 </body>
 </html>
