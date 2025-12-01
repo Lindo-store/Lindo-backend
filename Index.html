@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINDOʻ STORE - Premium T-Shirts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .product-card { transition: transform 0.2s; }
+        .product-card:active { transform: scale(0.98); }
+        .cart-item { border-bottom: 1px solid #374151; padding: 12px 0; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-400">LINDOʻ STORE</h1>
+            <button id="cartButton" class="bg-purple-600 px-4 py-2 rounded-lg flex items-center gap-2">
+                🛒 <span id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Test Banner -->
+    <div class="bg-yellow-600 text-white text-center py-2 text-sm">
+        <strong>TEST MODE:</strong> Card: 5284 9732 7396 1239 (01/30 - 311)
+    </div>
+
+    <!-- Products Grid -->
+    <div id="productsGrid" class="p-4 grid gap-4">
+        <!-- Products will load here -->
+    </div>
+
+    <!-- Admin Button -->
+    <button id="adminButton" class="fixed bottom-4 right-4 bg-blue-600 text-white w-14 h-14 rounded-full text-2xl shadow-lg">
+        +
+    </button>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-end justify-center z-50 p-4">
+        <div class="bg-gray-800 rounded-t-2xl w-full max-w-md max-h-[80vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Your Cart</h2>
+                <button id="closeCart" class="text-2xl">×</button>
+            </div>
+            <div id="cartItems" class="p-4 overflow-y-auto max-h-96">
+                <!-- Cart items here -->
+            </div>
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex justify-between text-lg font-bold mb-4">
+                    <span>Total:</span>
+                    <span id="cartTotal">R 0.00</span>
+                </div>
+                <button id="checkoutButton" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold">
+                    🔒 Checkout with PayFast
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Add Product</h2>
+                <button id="closeAdmin" class="text-2xl">×</button>
+            </div>
+            <div class="p-4 overflow-y-auto">
+                <form id="productForm" class="space-y-4">
+                    <input type="text" id="productName" placeholder="Product Name" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    <textarea id="productDesc" placeholder="Description" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 h-20" required></textarea>
+                    <input type="number" id="productPrice" placeholder="Price (Rands)" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    <input type="url" id="productImage" placeholder="Image URL" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 bg-green-600 text-white p-3 rounded-lg font-bold">Add Product</button>
+                        <button type="button" id="cancelAdmin" class="flex-1 bg-gray-600 text-white p-3 rounded-lg">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile-optimized LINDO Store
+        let cart = [];
+        let products = [
+            {
+                name: "LINDOʻ Premium Tee",
+                description: "High-quality cotton t-shirt",
+                price: 299.99,
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400"
+            },
+            {
+                name: "LINDOʻ Classic Black", 
+                description: "Classic black minimalist design",
+                price: 249.99,
+                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400"
+            },
+            {
+                name: "LINDOʻ Limited Edition",
+                description: "Exclusive limited edition",
+                price: 349.99, 
+                image: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400"
+            }
+        ];
+
+        // Load products
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">${product.name}</h3>
+                        <p class="text-gray-300 text-sm mb-3">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-purple-400">R ${product.price}</span>
+                            <button onclick="addToCart(${products.indexOf(product)})" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cart functions
+        function addToCart(index) {
+            cart.push(products[index]);
+            updateCart();
+            const button = event.target;
+            button.textContent = 'Added!';
+            button.classList.add('bg-green-600');
+            setTimeout(() => {
+                button.textContent = 'Add to Cart';
+                button.classList.remove('bg-green-600');
+            }, 1000);
+        }
+
+        function updateCart() {
+            document.getElementById('cartCount').textContent = cart.length;
+            const cartItems = document.getElementById('cartItems');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            document.getElementById('cartTotal').textContent = `R ${total.toFixed(2)}`;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-400 text-center py-8">Your cart is empty</p>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="font-medium">${item.name}</p>
+                                <p class="text-purple-400">R ${item.price}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Checkout function - UPDATE THIS URL!
+        function checkout() {
+            if (cart.length === 0) return;
+            
+            const orderId = 'lindo_' + Date.now();
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            // REPLACE WITH YOUR ACTUAL BACKEND URL
+            const backendUrl = 'https://lindo-backend.onrender.com';
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://sandbox.payfast.co.za/eng/process';
+            
+            const fields = {
+                merchant_id: '10000100',
+                merchant_key: '46f0cd694581a',
+                return_url: window.location.origin + '/success.html',
+                cancel_url: window.location.origin + '/cancel.html', 
+                notify_url: backendUrl + '/payfast-notify',
+                amount: total.toFixed(2),
+                item_name: 'LINDO Order - ' + cart.length + ' items',
+                m_payment_id: orderId
+            };
+            
+            for (const key in fields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Admin functions
+        document.getElementById('productForm').onsubmit = function(e) {
+            e.preventDefault();
+            const newProduct = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDesc').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                image: document.getElementById('productImage').value
+            };
+            products.push(newProduct);
+            loadProducts();
+            document.getElementById('adminModal').classList.add('hidden');
+            this.reset();
+        };
+
+        // Event listeners
+        document.getElementById('cartButton').onclick = () => {
+            document.getElementById('cartModal').classList.remove('hidden');
+        };
+        
+        document.getElementById('closeCart').onclick = () => {
+            document.getElementById('cartModal').classList.add('hidden');
+        };
+        
+        document.getElementById('checkoutButton').onclick = checkout;
+        
+        document.getElementById('adminButton').onclick = () => {
+            document.getElementById('adminModal').classList.remove('hidden');
+        };
+        
+        document.getElementById('closeAdmin').onclick = 
+        document.getElementById('cancelAdmin').onclick = () => {
+            document.getElementById('adminModal').classList.add('hidden');
+        };
+
+        // Initialize store
+        loadProducts();
+        updateCart();
+    </script>
+</body>
+  </html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINDOʻ STORE - Premium T-Shirts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .product-card { transition: transform 0.2s; }
+        .product-card:active { transform: scale(0.98); }
+        .cart-item { border-bottom: 1px solid #374151; padding: 12px 0; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-400">LINDOʻ STORE</h1>
+            <button id="cartButton" class="bg-purple-600 px-4 py-2 rounded-lg flex items-center gap-2">
+                🛒 <span id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Test Banner -->
+    <div class="bg-yellow-600 text-white text-center py-2 text-sm">
+        <strong>TEST MODE:</strong> Card: 5284 9732 7396 1239 (01/30 - 311)
+    </div>
+
+    <!-- Products Grid -->
+    <div id="productsGrid" class="p-4 grid gap-4">
+        <!-- Products will load here -->
+    </div>
+
+    <!-- Admin Button -->
+    <button id="adminButton" class="fixed bottom-4 right-4 bg-blue-600 text-white w-14 h-14 rounded-full text-2xl shadow-lg">
+        +
+    </button>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-end justify-center z-50 p-4">
+        <div class="bg-gray-800 rounded-t-2xl w-full max-w-md max-h-[80vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Your Cart</h2>
+                <button id="closeCart" class="text-2xl">×</button>
+            </div>
+            <div id="cartItems" class="p-4 overflow-y-auto max-h-96">
+                <!-- Cart items here -->
+            </div>
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex justify-between text-lg font-bold mb-4">
+                    <span>Total:</span>
+                    <span id="cartTotal">R 0.00</span>
+                </div>
+                <button id="checkoutButton" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold">
+                    🔒 Checkout with PayFast
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Add Product</h2>
+                <button id="closeAdmin" class="text-2xl">×</button>
+            </div>
+            <div class="p-4 overflow-y-auto">
+                <form id="productForm" class="space-y-4">
+                    <input type="text" id="productName" placeholder="Product Name" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    <textarea id="productDesc" placeholder="Description" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 h-20" required></textarea>
+                    <input type="number" id="productPrice" placeholder="Price (Rands)" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    <input type="url" id="productImage" placeholder="Image URL" class="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600" required>
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 bg-green-600 text-white p-3 rounded-lg font-bold">Add Product</button>
+                        <button type="button" id="cancelAdmin" class="flex-1 bg-gray-600 text-white p-3 rounded-lg">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile-optimized LINDO Store
+        let cart = [];
+        let products = [
+            {
+                name: "LINDOʻ Premium Tee",
+                description: "High-quality cotton t-shirt",
+                price: 299.99,
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400"
+            },
+            {
+                name: "LINDOʻ Classic Black", 
+                description: "Classic black minimalist design",
+                price: 249.99,
+                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400"
+            },
+            {
+                name: "LINDOʻ Limited Edition",
+                description: "Exclusive limited edition",
+                price: 349.99, 
+                image: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400"
+            }
+        ];
+
+        // Load products
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">${product.name}</h3>
+                        <p class="text-gray-300 text-sm mb-3">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-purple-400">R ${product.price}</span>
+                            <button onclick="addToCart(${products.indexOf(product)})" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cart functions
+        function addToCart(index) {
+            cart.push(products[index]);
+            updateCart();
+            const button = event.target;
+            button.textContent = 'Added!';
+            button.classList.add('bg-green-600');
+            setTimeout(() => {
+                button.textContent = 'Add to Cart';
+                button.classList.remove('bg-green-600');
+            }, 1000);
+        }
+
+        function updateCart() {
+            document.getElementById('cartCount').textContent = cart.length;
+            const cartItems = document.getElementById('cartItems');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            document.getElementById('cartTotal').textContent = `R ${total.toFixed(2)}`;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-400 text-center py-8">Your cart is empty</p>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="font-medium">${item.name}</p>
+                                <p class="text-purple-400">R ${item.price}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Checkout function - UPDATE THIS URL!
+        function checkout() {
+            if (cart.length === 0) return;
+            
+            const orderId = 'lindo_' + Date.now();
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            // REPLACE WITH YOUR ACTUAL BACKEND URL
+            const backendUrl = 'https://lindo-backend.onrender.com';
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://sandbox.payfast.co.za/eng/process';
+            
+            const fields = {
+                merchant_id: '10000100',
+                merchant_key: '46f0cd694581a',
+                return_url: window.location.origin + '/success.html',
+                cancel_url: window.location.origin + '/cancel.html', 
+                notify_url: backendUrl + '/payfast-notify',
+                amount: total.toFixed(2),
+                item_name: 'LINDO Order - ' + cart.length + ' items',
+                m_payment_id: orderId
+            };
+            
+            for (const key in fields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Admin functions
+        document.getElementById('productForm').onsubmit = function(e) {
+            e.preventDefault();
+            const newProduct = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDesc').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                image: document.getElementById('productImage').value
+            };
+            products.push(newProduct);
+            loadProducts();
+            document.getElementById('adminModal').classList.add('hidden');
+            this.reset();
+        };
+
+        // Event listeners
+        document.getElementById('cartButton').onclick = () => {
+            document.getElementById('cartModal').classList.remove('hidden');
+        };
+        
+        document.getElementById('closeCart').onclick = () => {
+            document.getElementById('cartModal').classList.add('hidden');
+        };
+        
+        document.getElementById('checkoutButton').onclick = checkout;
+        
+        document.getElementById('adminButton').onclick = () => {
+            document.getElementById('adminModal').classList.remove('hidden');
+        };
+        
+        document.getElementById('closeAdmin').onclick = 
+        document.getElementById('cancelAdmin').onclick = () => {
+            document.getElementById('adminModal').classList.add('hidden');
+        };
+
+        // Initialize store
+        loadProducts();
+        updateCart();
+    </script>
+</body>
+</html>
