@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DANKKO - Premium Minimalist Streetwear</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Your existing styles with additions */
         .product-card { transition: transform 0.2s; }
         .product-card:active { transform: scale(0.98); }
         .cart-item { border-bottom: 1px solid #374151; padding: 12px 0; }
@@ -25,50 +28,6 @@
             font-size: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        .product-image-container {
-            position: relative;
-            overflow: hidden;
-        }
-        .product-image {
-            transition: transform 0.5s ease;
-        }
-        .product-card:hover .product-image {
-            transform: scale(1.05);
-        }
-        
-        /* Store Name Animation - Black & White */
-        @keyframes subtleGlow {
-            0%, 100% { 
-                text-shadow: 0 0 10px rgba(255,255,255,0.1);
-                transform: scale(1);
-            }
-            50% { 
-                text-shadow: 0 0 20px rgba(255,255,255,0.3);
-                transform: scale(1.02);
-            }
-        }
-        
-        .store-name {
-            animation: subtleGlow 4s ease-in-out infinite;
-            font-weight: 900;
-            color: white;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-        
-        /* Promotion Banner - Black & White */
-        .promo-banner {
-            background: linear-gradient(135deg, #000000, #333333, #666666);
-            animation: subtleShimmer 3s ease-in-out infinite alternate;
-            color: white;
-            border-top: 1px solid #444;
-            border-bottom: 1px solid #444;
-        }
-        
-        @keyframes subtleShimmer {
-            0% { background-position: -100% 0; }
-            100% { background-position: 100% 0; }
-        }
         
         .category-badge {
             position: absolute;
@@ -84,211 +43,189 @@
             border: 1px solid #666;
         }
         
-        /* Logo styling - Black & White */
-        .store-logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid;
-            border-image: linear-gradient(135deg, #000000, #FFFFFF) 1;
-            filter: grayscale(100%);
-            transition: all 0.3s ease;
-        }
-        
-        .store-logo:hover {
-            filter: grayscale(0%);
-            transform: scale(1.05);
-        }
-        
-        .logo-container {
+        /* Notification Bell */
+        .notification-bell {
             position: relative;
-            width: 130px;
-            height: 130px;
-            margin: 0 auto;
+            cursor: pointer;
         }
         
-        .logo-glow {
+        .notification-count {
             position: absolute;
             top: -5px;
-            left: -5px;
             right: -5px;
-            bottom: -5px;
-            background: linear-gradient(135deg, #000000, #666666);
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            opacity: 0.3;
-            filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* Black & White theme adjustments */
-        .bg-gray-800 {
-            background-color: #1a1a1a !important;
+        /* Sizes Selection */
+        .size-option {
+            padding: 4px 8px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .border-gray-700 {
-            border-color: #333 !important;
+        .size-option:hover {
+            background: #333;
         }
         
-        .text-purple-400 {
-            color: #ffffff !important;
-        }
-        
-        .bg-purple-600 {
-            background-color: #000000 !important;
-        }
-        
-        .bg-purple-600:hover {
-            background-color: #333333 !important;
-        }
-        
-        .hover\:border-purple-500:hover {
-            border-color: #666 !important;
-        }
-        
-        /* Price styling - White on Black */
-        .text-purple-400 {
-            color: #ffffff !important;
+        .size-option.selected {
+            background: white;
+            color: black;
+            border-color: white;
             font-weight: bold;
         }
         
-        /* Button styling */
-        button {
-            transition: all 0.2s ease;
+        .size-option.low-stock {
+            background: #7f1d1d;
+            color: #fecaca;
+            border-color: #ef4444;
         }
         
-        button:hover {
-            transform: translateY(-2px);
+        .size-option.out-of-stock {
+            background: #444;
+            color: #999;
+            border-color: #666;
+            cursor: not-allowed;
         }
         
-        /* Image instructions - subtle */
-        .image-instructions {
-            background: rgba(0,0,0,0.5);
-            color: #ccc;
-            border: 1px solid #444;
+        /* Stock indicator */
+        .stock-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+        
+        .stock-high { background: #10b981; }
+        .stock-medium { background: #f59e0b; }
+        .stock-low { background: #ef4444; animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Image upload preview */
+        .upload-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px dashed #666;
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #000;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Simplified logo animation */
+        .store-name {
+            font-weight: 900;
+            color: white;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        /* Test code warning */
+        .test-warning {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            color: white;
+            border: 1px solid #ef4444;
         }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
-    <!-- Header with Logo -->
+    <!-- Header -->
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div class="px-4 py-4 flex flex-col md:flex-row justify-between items-center">
-            <!-- Logo and Store Name Container -->
-            <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                <!-- Logo Image -->
-                <div class="logo-container">
-                    <div class="logo-glow"></div>
+        <div class="px-4 py-4 flex justify-between items-center">
+            <!-- Logo and Store Name -->
+            <div class="flex items-center space-x-3">
+                <div class="logo-container relative">
                     <img 
                         id="storeLogo" 
-                        src="https://images.unsplash.com/photo-1567446537710-0e9b8d4d8c4d?w=400&h=400&fit=crop&crop=center&auto=format&fit=crop&q=80" 
+                        src="https://drive.google.com/uc?export=view&id=1yAAtyhSW2ozGyLm5CkXHFr7S6Y3CYpmU" 
                         alt="DANKKO Logo" 
-                        class="store-logo cursor-pointer shadow-2xl"
-                        onclick="changeLogo()"
-                        title="Click to change logo"
+                        class="w-16 h-16 rounded-full object-cover border-2 border-white"
                     >
                 </div>
-                
-                <!-- Store Name -->
                 <div>
-                    <h1 class="store-name text-2xl md:text-4xl font-black tracking-wider">DANKKO</h1>
-                    <p class="text-gray-400 text-sm mt-1 tracking-widest">MINIMALIST STREETWEAR</p>
+                    <h1 class="store-name text-xl md:text-2xl">DANKKO</h1>
+                    <p class="text-gray-400 text-xs">MINIMALIST STREETWEAR</p>
                 </div>
             </div>
             
-            <!-- Cart Button -->
-            <button id="cartButton" class="bg-black hover:bg-gray-800 border border-gray-700 px-5 py-3 rounded-lg flex items-center gap-2 font-bold text-lg transition-all">
-                🛒 <span id="cartCount">0</span>
-            </button>
+            <!-- Right side: Notification + Cart -->
+            <div class="flex items-center space-x-4">
+                <!-- Notification Bell -->
+                <div class="notification-bell relative" onclick="showNotifications()">
+                    <i class="fas fa-bell text-xl"></i>
+                    <div id="notificationCount" class="notification-count hidden">0</div>
+                </div>
+                
+                <!-- Cart Button -->
+                <button id="cartButton" class="bg-black hover:bg-gray-800 border border-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 font-bold">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Promotion Banner -->
-    <div class="promo-banner text-white text-center py-3 px-4 font-bold text-sm md:text-base tracking-wider">
-        ⚫ LIMITED TIME: FREE SHIPPING ON ORDERS OVER R500 ⚪
+    <!-- Test Code Banner - Will auto-hide after 5 seconds -->
+    <div id="testBanner" class="test-warning text-center py-2 text-sm font-bold transition-opacity duration-500">
+        🧪 TEST MODE ACTIVE - Card: 5284 9732 7396 1239 (01/30 - 311)
     </div>
 
-    <!-- Test Banner -->
-    <div class="bg-gray-800 border-b border-gray-700 text-gray-300 text-center py-2 text-sm">
-        <strong>TEST MODE:</strong> Card: 5284 9732 7396 1239 (01/30 - 311)
+    <!-- Promotion Banner -->
+    <div class="bg-gray-800 border-b border-gray-700 text-white text-center py-3 px-4 font-bold text-sm">
+        ⚫ FREE SHIPPING ON ORDERS OVER R500 ⚪
     </div>
 
     <!-- Products Grid -->
-    <div id="productsGrid" class="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div id="productsGrid" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Products will load here -->
     </div>
 
     <!-- Admin Button -->
-    <button id="adminButton" class="fixed bottom-4 right-4 bg-black hover:bg-gray-800 border border-gray-700 text-white w-14 h-14 rounded-full text-2xl shadow-lg z-40 transition-all">
-        +
+    <button id="adminButton" class="fixed bottom-4 right-4 bg-black hover:bg-gray-800 border border-gray-700 text-white w-12 h-12 rounded-full text-xl shadow-lg z-40">
+        <i class="fas fa-plus"></i>
     </button>
 
-    <!-- Logo Update Modal -->
-    <div id="logoModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 p-4">
-        <div class="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white">⚫ Update DANKKO Logo</h2>
-                <button id="closeLogo" class="text-2xl hover:text-white">×</button>
-            </div>
-            <div class="p-4 overflow-y-auto">
-                <div class="space-y-4">
-                    <!-- Current Logo Preview -->
-                    <div class="text-center">
-                        <p class="text-gray-300 text-sm mb-2">Current Logo:</p>
-                        <img id="currentLogoPreview" src="" alt="Current Logo" class="w-32 h-32 rounded-full object-cover mx-auto border-2 border-white">
-                    </div>
-                    
-                    <!-- Logo URL Input -->
-                    <div>
-                        <label class="text-gray-300 text-sm block mb-1">Enter Logo Image URL</label>
-                        <input 
-                            type="url" 
-                            id="logoUrl" 
-                            placeholder="https://imgur.com/your-logo.jpg" 
-                            class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" 
-                            required
-                        >
-                    </div>
-                    
-                    <!-- Logo Preview -->
-                    <div id="logoPreviewContainer" class="hidden">
-                        <p class="text-gray-300 text-sm mb-2">New Logo Preview:</p>
-                        <img id="logoPreview" src="" alt="Logo Preview" class="w-32 h-32 rounded-full object-cover mx-auto border-2 border-gray-500">
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="flex gap-2 pt-4">
-                        <button onclick="updateLogo()" class="flex-1 bg-black hover:bg-gray-800 border border-gray-700 text-white p-3 rounded-lg font-bold">
-                            ✅ UPDATE LOGO
-                        </button>
-                        <button id="cancelLogo" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg">
-                            CANCEL
-                        </button>
-                    </div>
-                    
-                    <!-- Black & White Logo Ideas -->
-                    <div class="pt-4 border-t border-gray-800">
-                        <div class="grid grid-cols-3 gap-2">
-                            <img 
-                                src="https://images.unsplash.com/photo-1567446537710-0e9b8d4d8c4d?w=200&h=200&fit=crop&crop=center&auto=format&fit=crop&q=80" 
-                                class="w-16 h-16 rounded-full object-cover cursor-pointer hover:scale-110 transition filter grayscale"
-                                onclick="document.getElementById('logoUrl').value = this.src"
-                                title="Click to use"
-                            >
-                            <img 
-                                src="https://images.unsplash.com/photo-1634942537034-2531766767d1?w=200&h=200&fit=crop&crop=center&auto=format&fit=crop&q=80" 
-                                class="w-16 h-16 rounded-full object-cover cursor-pointer hover:scale-110 transition filter grayscale"
-                                onclick="document.getElementById('logoUrl').value = this.src"
-                                title="Click to use"
-                            >
-                            <img 
-                                src="https://images.unsplash.com/photo-1621839673705-6617adf9e890?w=200&h=200&fit=crop&crop=center&auto=format&fit=crop&q=80" 
-                                class="w-16 h-16 rounded-full object-cover cursor-pointer hover:scale-110 transition filter grayscale"
-                                onclick="document.getElementById('logoUrl').value = this.src"
-                                title="Click to use"
-                            >
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="fixed top-16 right-4 bg-gray-800 border border-gray-700 rounded-lg shadow-xl w-80 max-h-96 overflow-hidden hidden z-50">
+        <div class="p-3 border-b border-gray-700 flex justify-between items-center">
+            <h3 class="font-bold"><i class="fas fa-bell mr-2"></i>NOTIFICATIONS</h3>
+            <button onclick="clearNotifications()" class="text-xs text-gray-400 hover:text-white">Clear All</button>
+        </div>
+        <div id="notificationList" class="p-2 overflow-y-auto max-h-80">
+            <!-- Notifications will appear here -->
         </div>
     </div>
 
@@ -296,7 +233,7 @@
     <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-end justify-center z-50 p-4">
         <div class="bg-gray-900 border border-gray-700 rounded-t-2xl w-full max-w-md max-h-[80vh] overflow-hidden">
             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white">YOUR CART</h2>
+                <h2 class="text-xl font-bold"><i class="fas fa-shopping-cart mr-2"></i>YOUR CART</h2>
                 <button id="closeCart" class="text-2xl text-gray-400 hover:text-white">×</button>
             </div>
             <div id="cartItems" class="p-4 overflow-y-auto max-h-96">
@@ -308,29 +245,8 @@
                     <span id="cartTotal" class="text-white">R 0.00</span>
                 </div>
                 
-                <!-- Free Shipping Progress -->
-                <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 mb-4">
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="text-gray-300">Add R<span id="shippingNeeded">500</span> for FREE shipping</span>
-                        <span id="shippingProgress" class="text-white">0%</span>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-2">
-                        <div id="shippingBar" class="bg-gray-300 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <!-- Test Card Info -->
-                <div class="bg-gray-800 border border-gray-600 rounded-lg p-3 mb-4">
-                    <h3 class="text-gray-300 font-bold mb-1 text-sm">🧪 TEST CARD:</h3>
-                    <p class="text-gray-400 text-xs">5284 9732 7396 1239</p>
-                    <p class="text-gray-400 text-xs">Exp: 01/30 | CVV: 311</p>
-                </div>
-                
                 <button id="checkoutButton" class="w-full bg-black hover:bg-gray-800 border border-gray-700 text-white py-3 rounded-lg font-bold">
-                    🔒 CHECKOUT WITH PAYFAST
-                </button>
-                <button id="continueShopping" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white py-3 rounded-lg mt-2">
-                    CONTINUE SHOPPING
+                    <i class="fas fa-lock mr-2"></i>PROCEED TO CHECKOUT
                 </button>
             </div>
         </div>
@@ -340,49 +256,88 @@
     <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 p-4">
         <div class="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white">ADD NEW PRODUCT</h2>
+                <h2 class="text-xl font-bold"><i class="fas fa-plus-circle mr-2"></i>ADD NEW PRODUCT</h2>
                 <button id="closeAdmin" class="text-2xl text-gray-400 hover:text-white">×</button>
             </div>
             <div class="p-4 overflow-y-auto">
                 <form id="productForm" class="space-y-4">
+                    <!-- Product Name -->
                     <div>
                         <label class="text-gray-300 text-sm block mb-1">PRODUCT NAME</label>
-                        <input type="text" id="productName" placeholder="e.g., DANKKO Essential Tee" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" required>
+                        <input type="text" id="productName" placeholder="DANKKO Essential Tee" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" required>
                     </div>
+                    
+                    <!-- Product Description -->
                     <div>
                         <label class="text-gray-300 text-sm block mb-1">DESCRIPTION</label>
-                        <textarea id="productDesc" placeholder="Minimalist design, premium cotton..." class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700 h-20" required></textarea>
+                        <textarea id="productDesc" placeholder="Premium cotton, minimalist design..." class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700 h-20" required></textarea>
                     </div>
+                    
+                    <!-- Price -->
                     <div>
-                        <label class="text-gray-300 text-sm block mb-1">PRICE (RANDS)</label>
-                        <input type="number" id="productPrice" placeholder="299.99" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" required>
+                        <label class="text-gray-300 text-sm block mb-1">PRICE (R)</label>
+                        <input type="number" id="productPrice" placeholder="299.99" step="0.01" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" required>
                     </div>
+                    
+                    <!-- Category -->
                     <div>
                         <label class="text-gray-300 text-sm block mb-1">CATEGORY</label>
                         <select id="productCategory" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" required>
                             <option value="tshirt">T-SHIRT</option>
                             <option value="hoodie">HOODIE</option>
                             <option value="cap">CAP</option>
-                            <option value="premium">PREMIUM</option>
+                            <option value="pants">PANTS</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="text-gray-300 text-sm block mb-1">IMAGE URL</label>
-                        <input type="url" id="productImage" placeholder="https://imgur.com/your-product.jpg" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700" required>
+                    
+                    <!-- Sizes with Stock -->
+                    <div class="pt-2">
+                        <label class="text-gray-300 text-sm block mb-2">SIZES & STOCK QUANTITY</label>
+                        <div id="sizeStockContainer" class="grid grid-cols-4 gap-2">
+                            <!-- Sizes will be added here -->
+                        </div>
                     </div>
-                    <!-- Logo Update Option -->
+                    
+                    <!-- Easy Image Upload -->
                     <div class="pt-4 border-t border-gray-800">
-                        <label class="text-white text-sm block mb-1 font-bold">⚫ UPDATE STORE LOGO (OPTIONAL)</label>
-                        <input 
-                            type="url" 
-                            id="adminLogoUrl" 
-                            placeholder="https://imgur.com/new-logo.jpg" 
-                            class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700"
-                        >
+                        <label class="text-gray-300 text-sm block mb-2">
+                            <i class="fas fa-image mr-1"></i> PRODUCT IMAGE
+                        </label>
+                        
+                        <!-- Option 1: Direct URL Input -->
+                        <div class="mb-3">
+                            <input type="url" id="productImageUrl" placeholder="https://image-url.com/your-image.jpg" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-700 mb-2">
+                            <p class="text-xs text-gray-400">Or upload using one of these services:</p>
+                        </div>
+                        
+                        <!-- Option 2: Quick Upload Buttons -->
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <button type="button" onclick="setImageService('imgur')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded text-sm">
+                                <i class="fab fa-imdb mr-1"></i> Imgur
+                            </button>
+                            <button type="button" onclick="setImageService('unsplash')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded text-sm">
+                                <i class="fas fa-camera mr-1"></i> Unsplash
+                            </button>
+                            <button type="button" onclick="setImageService('drive')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded text-sm">
+                                <i class="fab fa-google-drive mr-1"></i> Drive
+                            </button>
+                        </div>
+                        
+                        <!-- Image Preview -->
+                        <div id="imagePreviewContainer" class="hidden">
+                            <p class="text-gray-300 text-sm mb-2">Preview:</p>
+                            <img id="imagePreview" class="upload-preview mx-auto">
+                        </div>
                     </div>
+                    
+                    <!-- Submit Buttons -->
                     <div class="flex gap-2 pt-4">
-                        <button type="submit" class="flex-1 bg-black hover:bg-gray-800 border border-gray-700 text-white p-3 rounded-lg font-bold">✅ ADD PRODUCT</button>
-                        <button type="button" id="cancelAdmin" class="flex-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white p-3 rounded-lg">CANCEL</button>
+                        <button type="submit" class="flex-1 bg-black hover:bg-gray-800 border border-gray-700 text-white p-3 rounded-lg font-bold">
+                            <i class="fas fa-check mr-2"></i>ADD PRODUCT
+                        </button>
+                        <button type="button" id="cancelAdmin" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg">
+                            CANCEL
+                        </button>
                     </div>
                 </form>
             </div>
@@ -390,184 +345,367 @@
     </div>
 
     <script>
-        // DANKKO Store - Black & White Minimalist
-        let storeLogoUrl = "https://images.unsplash.com/photo-1567446537710-0e9b8d4d8c4d?w=400&h=400&fit=crop&crop=center&auto=format&fit=crop&q=80";
+        // DANKKO Store - Enhanced Version
+        let storeLogoUrl = "https://drive.google.com/uc?export=view&id=1yAAtyhSW2ozGyLm5CkXHFr7S6Y3CYpmU";
         
         let cart = [];
-        const FREE_SHIPPING_THRESHOLD = 500;
+        let notifications = [];
+        let lowStockThreshold = 5; // Notify when stock is 5 or less
+        
+        // Available sizes
+        const availableSizes = {
+            tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+            hoodie: ['S', 'M', 'L', 'XL', 'XXL'],
+            cap: ['ONE SIZE'],
+            pants: ['28', '30', '32', '34', '36']
+        };
+        
+        // Sample products with sizes and stock
         let products = [
-            // T-SHIRTS - Black & White theme
             {
                 name: "DANKKO ESSENTIAL TEE",
                 description: "MINIMALIST BLACK COTTON T-SHIRT",
                 price: 349.99,
                 category: "tshirt",
                 image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&auto=format&fit=crop&q=80",
+                sizes: [
+                    { size: 'XS', stock: 15 },
+                    { size: 'S', stock: 20 },
+                    { size: 'M', stock: 3 }, // Low stock
+                    { size: 'L', stock: 12 },
+                    { size: 'XL', stock: 0 }, // Out of stock
+                    { size: 'XXL', stock: 7 }
+                ]
             },
-            {
-                name: "DANKKO MONOCHROME", 
-                description: "CLASSIC WHITE T-SHIRT WITH SUBTLE LOGO",
-                price: 299.99,
-                category: "tshirt",
-                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&auto=format&fit=crop&q=80",
-            },
-            {
-                name: "DANKKO CONTRAST",
-                description: "HIGH-CONTRAST BLACK & WHITE DESIGN",
-                price: 279.99,
-                category: "tshirt",
-                image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&auto=format&fit=crop&q=80",
-            },
-            
-            // HOODIES
             {
                 name: "DANKKO MINIMAL HOODIE",
                 description: "HEAVYWEIGHT BLACK HOODIE",
                 price: 599.99,
                 category: "hoodie",
                 image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&auto=format&fit=crop&q=80",
+                sizes: [
+                    { size: 'S', stock: 8 },
+                    { size: 'M', stock: 2 }, // Low stock
+                    { size: 'L', stock: 5 }, // Low stock
+                    { size: 'XL', stock: 1 }, // Low stock
+                    { size: 'XXL', stock: 10 }
+                ]
             },
-            {
-                name: "DANKKO SHADOW HOODIE",
-                description: "OVERSIZED GREY HOODIE",
-                price: 549.99,
-                category: "hoodie",
-                image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&auto=format&fit=crop&q=80",
-            },
-            
-            // CAPS
             {
                 name: "DANKKO BASIC CAP",
                 description: "BLACK BASEBALL CAP",
                 price: 249.99,
                 category: "cap",
                 image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80",
-            },
-            {
-                name: "DANKKO URBAN CAP",
-                description: "WHITE SNAPBACK CAP",
-                price: 229.99,
-                category: "cap",
-                image: "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=400&auto=format&fit=crop&q=80",
-            },
-            
-            // PREMIUM
-            {
-                name: "DANKKO LIMITED",
-                description: "EXCLUSIVE LIMITED EDITION",
-                price: 799.99,
-                category: "premium",
-                image: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400&auto=format&fit=crop&q=80",
-            },
-            {
-                name: "DANKKO SIGNATURE",
-                description: "PREMIUM SIGNATURE COLLECTION",
-                price: 699.99,
-                category: "premium",
-                image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&auto=format&fit=crop&q=80",
+                sizes: [
+                    { size: 'ONE SIZE', stock: 4 } // Low stock
+                ]
             }
         ];
         
-        // Category labels - Black & White theme
+        // Category configuration
         const categoryConfig = {
             tshirt: { label: "T-SHIRT", color: "linear-gradient(135deg, #000000, #333333)" },
             hoodie: { label: "HOODIE", color: "linear-gradient(135deg, #333333, #666666)" },
             cap: { label: "CAP", color: "linear-gradient(135deg, #666666, #999999)" },
-            premium: { label: "PREMIUM", color: "linear-gradient(135deg, #000000, #FFFFFF)" }
+            pants: { label: "PANTS", color: "linear-gradient(135deg, #000000, #FFFFFF)" }
         };
-
-        // Initialize the store logo
-        function initializeLogo() {
-            const logoImg = document.getElementById('storeLogo');
-            const currentLogoPreview = document.getElementById('currentLogoPreview');
+        
+        // Initialize the application
+        function initApp() {
+            // Hide test banner after 5 seconds
+            setTimeout(() => {
+                document.getElementById('testBanner').classList.add('opacity-0');
+                setTimeout(() => {
+                    document.getElementById('testBanner').classList.add('hidden');
+                }, 500);
+            }, 5000);
             
-            // Load saved logo from localStorage
-            const savedLogo = localStorage.getItem('dankkoStoreLogo');
-            if (savedLogo) {
-                storeLogoUrl = savedLogo;
+            // Load products
+            loadProducts();
+            
+            // Load size options in admin form
+            loadSizeOptions();
+            
+            // Check for low stock items
+            checkLowStock();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize image URL preview
+            document.getElementById('productImageUrl').addEventListener('input', function(e) {
+                showImagePreview(e.target.value);
+            });
+        }
+        
+        // Set image service URLs
+        function setImageService(service) {
+            let url = '';
+            let message = '';
+            
+            switch(service) {
+                case 'imgur':
+                    url = 'https://i.imgur.com/YOUR_IMAGE_ID.jpg';
+                    message = 'Paste your Imgur image URL (e.g., https://i.imgur.com/abc123.jpg)';
+                    break;
+                case 'unsplash':
+                    url = 'https://images.unsplash.com/photo-';
+                    message = 'Paste your Unsplash image URL';
+                    break;
+                case 'drive':
+                    url = 'https://drive.google.com/uc?export=view&id=';
+                    message = 'Use format: https://drive.google.com/uc?export=view&id=YOUR_FILE_ID';
+                    break;
             }
             
-            // Set the logo
-            logoImg.src = storeLogoUrl;
-            currentLogoPreview.src = storeLogoUrl;
-            document.getElementById('logoUrl').value = storeLogoUrl;
+            const input = document.getElementById('productImageUrl');
+            input.value = url;
+            input.placeholder = message;
+            input.focus();
+        }
+        
+        // Show image preview
+        function showImagePreview(url) {
+            const container = document.getElementById('imagePreviewContainer');
+            const preview = document.getElementById('imagePreview');
             
-            // Preview functionality
-            document.getElementById('logoUrl').addEventListener('input', function(e) {
-                const previewContainer = document.getElementById('logoPreviewContainer');
-                const previewImg = document.getElementById('logoPreview');
+            if (url && url.startsWith('http')) {
+                preview.src = url;
+                preview.onerror = () => {
+                    container.classList.add('hidden');
+                    showToast('❌ Unable to load image. Check URL.', 'error');
+                };
+                preview.onload = () => {
+                    container.classList.remove('hidden');
+                };
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+        
+        // Check for low stock items
+        function checkLowStock() {
+            notifications = []; // Clear old notifications
+            
+            products.forEach(product => {
+                product.sizes.forEach(sizeInfo => {
+                    if (sizeInfo.stock > 0 && sizeInfo.stock <= lowStockThreshold) {
+                        const notification = {
+                            id: Date.now() + Math.random(),
+                            type: 'warning',
+                            message: `Low stock: ${product.name} (${sizeInfo.size}) - ${sizeInfo.stock} left`,
+                            productId: product.name,
+                            timestamp: new Date().toLocaleTimeString()
+                        };
+                        
+                        // Only add if not already in notifications
+                        if (!notifications.some(n => n.message === notification.message)) {
+                            notifications.push(notification);
+                            showToast(`⚠️ Low stock: ${product.name} - ${sizeInfo.stock} left`, 'warning');
+                        }
+                    }
+                    
+                    if (sizeInfo.stock === 0) {
+                        const notification = {
+                            id: Date.now() + Math.random(),
+                            type: 'error',
+                            message: `Out of stock: ${product.name} (${sizeInfo.size})`,
+                            productId: product.name,
+                            timestamp: new Date().toLocaleTimeString()
+                        };
+                        
+                        if (!notifications.some(n => n.message === notification.message)) {
+                            notifications.push(notification);
+                        }
+                    }
+                });
+            });
+            
+            updateNotificationBell();
+        }
+        
+        // Update notification bell
+        function updateNotificationBell() {
+            const countElement = document.getElementById('notificationCount');
+            const notificationList = document.getElementById('notificationList');
+            
+            if (notifications.length > 0) {
+                countElement.textContent = notifications.length;
+                countElement.classList.remove('hidden');
                 
-                if (e.target.value && e.target.value.startsWith('http')) {
-                    previewImg.src = e.target.value;
-                    previewContainer.classList.remove('hidden');
-                } else {
-                    previewContainer.classList.add('hidden');
+                // Update notification list
+                notificationList.innerHTML = notifications.map(notif => `
+                    <div class="p-3 border-b border-gray-700 ${notif.type === 'warning' ? 'bg-yellow-900 bg-opacity-20' : 'bg-red-900 bg-opacity-20'}">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <p class="text-sm ${notif.type === 'warning' ? 'text-yellow-300' : 'text-red-300'}">
+                                    ${notif.type === 'warning' ? '⚠️' : '❌'} ${notif.message}
+                                </p>
+                                <p class="text-xs text-gray-400 mt-1">${notif.timestamp}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                countElement.classList.add('hidden');
+                notificationList.innerHTML = '<p class="text-gray-500 text-center py-4">No notifications</p>';
+            }
+        }
+        
+        // Show notification panel
+        function showNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('hidden');
+        }
+        
+        // Clear all notifications
+        function clearNotifications() {
+            notifications = [];
+            updateNotificationBell();
+            document.getElementById('notificationPanel').classList.add('hidden');
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    ${type === 'warning' ? '⚠️' : 'ℹ️'}
+                    <span class="ml-2">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // Load size options in admin form
+        function loadSizeOptions() {
+            const container = document.getElementById('sizeStockContainer');
+            container.innerHTML = '';
+            
+            // Add size inputs for each category
+            Object.keys(availableSizes).forEach(category => {
+                if (category === 'tshirt') { // Default to tshirt sizes
+                    availableSizes[category].forEach(size => {
+                        container.innerHTML += `
+                            <div class="flex flex-col">
+                                <label class="text-xs text-gray-400 mb-1">${size}</label>
+                                <input 
+                                    type="number" 
+                                    min="0"
+                                    data-size="${size}"
+                                    placeholder="Qty"
+                                    class="bg-gray-800 text-white p-2 rounded border border-gray-700 text-sm"
+                                >
+                            </div>
+                        `;
+                    });
                 }
             });
         }
-
-        // Function to open logo update modal
-        function changeLogo() {
-            document.getElementById('logoModal').classList.remove('hidden');
-            document.getElementById('currentLogoPreview').src = storeLogoUrl;
-        }
-
-        // Function to update logo
-        function updateLogo() {
-            const newLogoUrl = document.getElementById('logoUrl').value.trim();
+        
+        // Update size options based on category selection
+        document.getElementById('productCategory').addEventListener('change', function() {
+            const category = this.value;
+            const container = document.getElementById('sizeStockContainer');
+            container.innerHTML = '';
             
-            if (!newLogoUrl) {
-                alert('Please enter a logo URL');
-                return;
-            }
-            
-            // Test if image loads
-            const testImg = new Image();
-            testImg.onload = function() {
-                storeLogoUrl = newLogoUrl;
-                document.getElementById('storeLogo').src = storeLogoUrl;
-                localStorage.setItem('dankkoStoreLogo', storeLogoUrl);
-                document.getElementById('logoModal').classList.add('hidden');
-                
-                // Show success animation
-                const logo = document.getElementById('storeLogo');
-                logo.style.transform = 'scale(1.1)';
-                logo.style.transition = 'transform 0.3s';
-                setTimeout(() => {
-                    logo.style.transform = 'scale(1)';
-                }, 300);
-                
-                alert('✅ LOGO UPDATED SUCCESSFULLY!');
-            };
-            
-            testImg.onerror = function() {
-                alert('❌ Error loading logo. Please check the URL and try again.');
-            };
-            
-            testImg.src = newLogoUrl;
-        }
-
-        // Load products - NO ROTATION, single image only
+            availableSizes[category].forEach(size => {
+                container.innerHTML += `
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-400 mb-1">${size}</label>
+                        <input 
+                            type="number" 
+                            min="0"
+                            data-size="${size}"
+                            placeholder="Qty"
+                            class="bg-gray-800 text-white p-2 rounded border border-gray-700 text-sm"
+                        >
+                    </div>
+                `;
+            });
+        });
+        
+        // Load products with sizes
         function loadProducts() {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = products.map((product, index) => {
                 const category = categoryConfig[product.category];
+                const hasLowStock = product.sizes.some(s => s.stock > 0 && s.stock <= lowStockThreshold);
+                
                 return `
                 <div class="product-card bg-gray-800 border border-gray-700 rounded-lg overflow-hidden hover:border-gray-600 transition">
-                    <div class="product-image-container relative">
+                    ${hasLowStock ? '<div class="bg-red-900 text-red-100 text-xs p-2 text-center font-bold">⚠️ LOW STOCK ITEM</div>' : ''}
+                    <div class="relative">
                         <div class="product-number">${index + 1}</div>
                         <div class="category-badge" style="background: ${category.color}">${category.label}</div>
                         <img 
                             src="${product.image}" 
                             alt="${product.name}" 
-                            class="product-image w-full h-48 object-cover"
+                            class="w-full h-48 object-cover"
                         >
                     </div>
                     <div class="p-4">
-                        <h3 class="text-lg font-bold mb-2 uppercase tracking-wider">${product.name}</h3>
+                        <h3 class="text-lg font-bold mb-2">${product.name}</h3>
                         <p class="text-gray-400 text-sm mb-3">${product.description}</p>
+                        
+                        <!-- Size Selection -->
+                        <div class="mb-3">
+                            <p class="text-gray-300 text-sm mb-2">SELECT SIZE:</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${product.sizes.map(sizeInfo => {
+                                    const isLowStock = sizeInfo.stock > 0 && sizeInfo.stock <= lowStockThreshold;
+                                    const isOutOfStock = sizeInfo.stock === 0;
+                                    let stockClass = '';
+                                    let stockIndicator = '';
+                                    
+                                    if (isOutOfStock) {
+                                        stockClass = 'out-of-stock';
+                                    } else if (isLowStock) {
+                                        stockClass = 'low-stock';
+                                        stockIndicator = '<span class="stock-indicator stock-low"></span>';
+                                    } else if (sizeInfo.stock > lowStockThreshold) {
+                                        stockIndicator = '<span class="stock-indicator stock-high"></span>';
+                                    }
+                                    
+                                    return `
+                                    <div class="relative">
+                                        <button 
+                                            type="button"
+                                            onclick="selectSize(${index}, '${sizeInfo.size}')"
+                                            class="size-option ${stockClass}"
+                                            ${isOutOfStock ? 'disabled' : ''}
+                                        >
+                                            ${stockIndicator}${sizeInfo.size}
+                                        </button>
+                                        ${isLowStock ? '<div class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>' : ''}
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        
+                        <!-- Stock Info -->
+                        <div class="text-xs text-gray-400 mb-3">
+                            ${product.sizes.map(sizeInfo => {
+                                if (sizeInfo.stock === 0) {
+                                    return `<span class="text-red-400">${sizeInfo.size}: Out of stock</span>`;
+                                } else if (sizeInfo.stock <= lowStockThreshold) {
+                                    return `<span class="text-yellow-400">${sizeInfo.size}: ${sizeInfo.stock} left</span>`;
+                                }
+                                return `<span class="text-green-400">${sizeInfo.size}: ${sizeInfo.stock} left</span>`;
+                            }).join(' | ')}
+                        </div>
+                        
+                        <!-- Price and Add to Cart -->
                         <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold">R ${product.price}</span>
+                            <span class="text-xl font-bold">R ${product.price.toFixed(2)}</span>
                             <button onclick="addToCart(${index})" class="bg-black hover:bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg transition font-bold">
                                 ADD TO CART
                             </button>
@@ -577,47 +715,84 @@
                 `;
             }).join('');
         }
-
-        // Update shipping progress
-        function updateShippingProgress() {
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            const needed = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
-            const progress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
+        
+        // Select size for a product
+        let selectedSizes = {};
+        function selectSize(productIndex, size) {
+            const product = products[productIndex];
+            const sizeInfo = product.sizes.find(s => s.size === size);
             
-            document.getElementById('shippingNeeded').textContent = needed;
-            document.getElementById('shippingProgress').textContent = Math.round(progress) + '%';
-            document.getElementById('shippingBar').style.width = progress + '%';
-            
-            // Black & White color based on progress
-            if (progress >= 100) {
-                document.getElementById('shippingBar').style.backgroundColor = '#FFFFFF';
-            } else if (progress >= 50) {
-                document.getElementById('shippingBar').style.backgroundColor = '#AAAAAA';
-            } else {
-                document.getElementById('shippingBar').style.backgroundColor = '#666666';
+            if (sizeInfo.stock === 0) {
+                showToast(`❌ ${size} is out of stock!`, 'error');
+                return;
             }
+            
+            selectedSizes[productIndex] = size;
+            showToast(`✅ Selected ${product.name} - ${size}`, 'success');
+            
+            // Update UI to show selected size
+            const buttons = document.querySelectorAll(`[onclick="selectSize(${productIndex}, '${size}')"]`);
+            buttons.forEach(btn => {
+                btn.parentElement.parentElement.querySelectorAll('.size-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                btn.classList.add('selected');
+            });
         }
-
-        // Cart functions
-        function addToCart(index) {
-            cart.push(products[index]);
+        
+        // Add to cart with selected size
+        function addToCart(productIndex) {
+            const product = products[productIndex];
+            const selectedSize = selectedSizes[productIndex];
+            
+            if (!selectedSize) {
+                showToast('❌ Please select a size first!', 'error');
+                return;
+            }
+            
+            const sizeInfo = product.sizes.find(s => s.size === selectedSize);
+            
+            if (sizeInfo.stock === 0) {
+                showToast('❌ This size is out of stock!', 'error');
+                return;
+            }
+            
+            // Decrease stock
+            sizeInfo.stock--;
+            
+            // Check if stock is now low
+            if (sizeInfo.stock === lowStockThreshold) {
+                const notification = {
+                    id: Date.now() + Math.random(),
+                    type: 'warning',
+                    message: `Low stock alert: ${product.name} (${selectedSize}) - ${sizeInfo.stock} left`,
+                    timestamp: new Date().toLocaleTimeString()
+                };
+                notifications.push(notification);
+                updateNotificationBell();
+                showToast(`⚠️ Only ${sizeInfo.stock} left of ${product.name} (${selectedSize})!`, 'warning');
+            }
+            
+            // Add to cart
+            cart.push({
+                ...product,
+                selectedSize: selectedSize,
+                cartId: Date.now() + Math.random()
+            });
+            
             updateCart();
-            const button = event.target;
-            button.textContent = 'ADDED!';
-            button.classList.add('bg-gray-700');
-            setTimeout(() => {
-                button.textContent = 'ADD TO CART';
-                button.classList.remove('bg-gray-700');
-            }, 1000);
+            loadProducts(); // Reload to update stock display
+            
+            showToast(`✅ Added ${product.name} (${selectedSize}) to cart!`, 'success');
         }
-
+        
+        // Update cart display
         function updateCart() {
             document.getElementById('cartCount').textContent = cart.length;
             const cartItems = document.getElementById('cartItems');
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             
             document.getElementById('cartTotal').textContent = `R ${total.toFixed(2)}`;
-            updateShippingProgress();
             
             if (cart.length === 0) {
                 cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">YOUR CART IS EMPTY</p>';
@@ -625,9 +800,10 @@
                 cartItems.innerHTML = cart.map((item, index) => `
                     <div class="cart-item">
                         <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-medium uppercase text-white">${item.name}</p>
-                                <p class="text-gray-400">R ${item.price}</p>
+                            <div class="flex-1">
+                                <p class="font-medium">${item.name}</p>
+                                <p class="text-gray-400 text-sm">Size: ${item.selectedSize}</p>
+                                <p class="text-gray-400">R ${item.price.toFixed(2)}</p>
                             </div>
                             <button onclick="removeFromCart(${index})" class="text-gray-400 hover:text-white text-sm font-bold border border-gray-700 px-3 py-1 rounded">
                                 REMOVE
@@ -637,162 +813,131 @@
                 `).join('');
             }
         }
-
+        
+        // Remove from cart
         function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCart();
-        }
-
-        // Checkout function
-        function checkout() {
-            if (cart.length === 0) return;
+            const removedItem = cart[index];
             
-            const orderId = 'dankko_' + Date.now();
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            
-            const backendUrl = 'https://lindo-backend.onrender.com';
-            const storeUrl = 'https://tiny-toffee-bde57d.netlify.app';
-            
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://sandbox.payfast.co.za/eng/process';
-            
-            const fields = {
-                merchant_id: '10000100',
-                merchant_key: '46f0cd694581a',
-                return_url: storeUrl + '/success.html',
-                cancel_url: storeUrl + '/cancel.html',
-                notify_url: backendUrl + '/payfast-notify',
-                amount: total.toFixed(2),
-                item_name: 'DANKKO Order - ' + cart.length + ' items',
-                m_payment_id: orderId,
-                email_address: 'customer@example.com'
-            };
-            
-            for (const key in fields) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = fields[key];
-                form.appendChild(input);
+            // Find the product and increase stock
+            const product = products.find(p => p.name === removedItem.name);
+            if (product) {
+                const sizeInfo = product.sizes.find(s => s.size === removedItem.selectedSize);
+                if (sizeInfo) {
+                    sizeInfo.stock++;
+                }
             }
             
-            document.body.appendChild(form);
-            form.submit();
+            cart.splice(index, 1);
+            updateCart();
+            loadProducts(); // Reload to update stock display
+            showToast('Item removed from cart', 'info');
         }
-
-        // Admin functions - Updated for single image
+        
+        // Admin form submission
         document.getElementById('productForm').onsubmit = function(e) {
             e.preventDefault();
             
-            // Get single image URL
-            const imageUrl = document.getElementById('productImage').value.trim();
-            if (!imageUrl) {
-                alert('Please enter a product image URL');
-                return;
-            }
+            // Get form values
+            const name = document.getElementById('productName').value;
+            const description = document.getElementById('productDesc').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const category = document.getElementById('productCategory').value;
+            const imageUrl = document.getElementById('productImageUrl').value;
             
-            // Add product with SINGLE image
+            // Get size quantities
+            const sizeInputs = document.querySelectorAll('#sizeStockContainer input[data-size]');
+            const sizes = [];
+            sizeInputs.forEach(input => {
+                const stock = parseInt(input.value) || 0;
+                if (input.dataset.size) {
+                    sizes.push({
+                        size: input.dataset.size,
+                        stock: stock
+                    });
+                }
+            });
+            
+            // Create new product
             const newProduct = {
-                name: document.getElementById('productName').value.toUpperCase(),
-                description: document.getElementById('productDesc').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                category: document.getElementById('productCategory').value,
-                image: imageUrl  // SINGLE IMAGE, NO ROTATION
+                name: name.toUpperCase(),
+                description: description,
+                price: price,
+                category: category,
+                image: imageUrl,
+                sizes: sizes
             };
+            
+            // Add to products array
             products.push(newProduct);
+            
+            // Reload products and check stock
             loadProducts();
+            checkLowStock();
             
-            // Update logo if provided
-            const logoUrl = document.getElementById('adminLogoUrl').value.trim();
-            if (logoUrl && logoUrl.startsWith('http')) {
-                updateLogoFromAdmin(logoUrl);
-            }
-            
-            // Close modal and reset
+            // Close modal and reset form
             document.getElementById('adminModal').classList.add('hidden');
             this.reset();
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
             
-            alert('✅ PRODUCT ADDED SUCCESSFULLY!' + (logoUrl ? ' + LOGO UPDATED!' : ''));
+            showToast('✅ Product added successfully!', 'success');
         };
         
-        function updateLogoFromAdmin(logoUrl) {
-            const testImg = new Image();
-            testImg.onload = function() {
-                storeLogoUrl = logoUrl;
-                document.getElementById('storeLogo').src = storeLogoUrl;
-                localStorage.setItem('dankkoStoreLogo', storeLogoUrl);
-                
-                // Show success animation
-                const logo = document.getElementById('storeLogo');
-                logo.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    logo.style.transform = 'scale(1)';
-                }, 300);
+        // Setup event listeners
+        function setupEventListeners() {
+            // Cart modal
+            document.getElementById('cartButton').onclick = () => {
+                document.getElementById('cartModal').classList.remove('hidden');
             };
-            testImg.onerror = function() {
-                console.log('Logo URL invalid:', logoUrl);
-            };
-            testImg.src = logoUrl;
-        }
-
-        // Event listeners
-        document.getElementById('cartButton').onclick = () => {
-            document.getElementById('cartModal').classList.remove('hidden');
-        };
-        
-        document.getElementById('closeCart').onclick = () => {
-            document.getElementById('cartModal').classList.add('hidden');
-        };
-        
-        document.getElementById('continueShopping').onclick = () => {
-            document.getElementById('cartModal').classList.add('hidden');
-        };
-        
-        document.getElementById('checkoutButton').onclick = checkout;
-        
-        document.getElementById('adminButton').onclick = () => {
-            document.getElementById('adminModal').classList.remove('hidden');
-        };
-        
-        document.getElementById('closeAdmin').onclick = 
-        document.getElementById('cancelAdmin').onclick = () => {
-            document.getElementById('adminModal').classList.add('hidden');
-        };
-        
-        // Logo modal listeners
-        document.getElementById('closeLogo').onclick = 
-        document.getElementById('cancelLogo').onclick = () => {
-            document.getElementById('logoModal').classList.add('hidden');
-        };
-        
-        // Close modals when clicking outside
-        document.getElementById('cartModal').onclick = (e) => {
-            if (e.target.id === 'cartModal') {
+            
+            document.getElementById('closeCart').onclick = () => {
                 document.getElementById('cartModal').classList.add('hidden');
-            }
-        };
-        
-        document.getElementById('adminModal').onclick = (e) => {
-            if (e.target.id === 'adminModal') {
+            };
+            
+            // Admin modal
+            document.getElementById('adminButton').onclick = () => {
+                document.getElementById('adminModal').classList.remove('hidden');
+            };
+            
+            document.getElementById('closeAdmin').onclick = 
+            document.getElementById('cancelAdmin').onclick = () => {
                 document.getElementById('adminModal').classList.add('hidden');
-            }
-        };
+            };
+            
+            // Close modals when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target.id === 'cartModal') {
+                    document.getElementById('cartModal').classList.add('hidden');
+                }
+                if (e.target.id === 'adminModal') {
+                    document.getElementById('adminModal').classList.add('hidden');
+                }
+            });
+            
+            // Checkout button
+            document.getElementById('checkoutButton').onclick = function() {
+                if (cart.length === 0) {
+                    showToast('❌ Your cart is empty!', 'error');
+                    return;
+                }
+                
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                alert(`Redirecting to checkout...\nTotal: R ${total.toFixed(2)}\nItems: ${cart.length}`);
+                // Here you would integrate with your payment gateway
+            };
+            
+            // Hide notification panel when clicking outside
+            document.addEventListener('click', (e) => {
+                const panel = document.getElementById('notificationPanel');
+                const bell = document.querySelector('.notification-bell');
+                
+                if (!panel.contains(e.target) && !bell.contains(e.target)) {
+                    panel.classList.add('hidden');
+                }
+            });
+        }
         
-        document.getElementById('logoModal').onclick = (e) => {
-            if (e.target.id === 'logoModal') {
-                document.getElementById('logoModal').classList.add('hidden');
-            }
-        };
-
-        // Initialize store
-        initializeLogo();
-        loadProducts();
-        updateCart();
-        
-        console.log('⚫ DANKKO STORE LOADED');
-        console.log('⚪ BLACK & WHITE MINIMALIST THEME');
-        console.log('📍 STORE URL: https://tiny-toffee-bde57d.netlify.app');
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
-                                                                                     </html>
+                            </html>
